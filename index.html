@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMM Reporting Groups — UI Mockup</title>
+<style>
+  :root {
+    --brand: #3b6bb5;
+    --brand-dark: #2d5a9e;
+    --brand-light: #e8eef7;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --border: #dee2e6;
+    --border-light: #e9ecef;
+    --text: #212529;
+    --text-secondary: #6c757d;
+    --text-tertiary: #adb5bd;
+    --link: #3b6bb5;
+    --danger: #c0392b;
+    --danger-bg: #fdf3f2;
+    --success: #27ae60;
+    --radius: 4px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    font-size: 15px;
+  }
+
+  /* ── Mockup page switcher (not part of actual UI) ── */
+  .mockup-switcher {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    padding: 8px 40px;
+    display: flex;
+    gap: 0;
+    font-size: 13px;
+  }
+  .mockup-switcher::before {
+    content: 'MOCKUP PAGES ▸';
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    font-weight: 700;
+    color: #adb5bd;
+    letter-spacing: .5px;
+    font-size: 11px;
+  }
+  .mockup-switcher button {
+    background: none; border: none; padding: 8px 16px;
+    font-size: 13px; color: var(--text-secondary); cursor: pointer;
+    border-bottom: 2px solid transparent; margin-bottom: -10px;
+    font-family: inherit;
+  }
+  .mockup-switcher button:hover { color: var(--text); background: #eee; }
+  .mockup-switcher button.active {
+    color: var(--brand); border-bottom-color: var(--brand); font-weight: 600;
+  }
+
+  /* ── Main container ── */
+  .container { max-width: 100%; padding: 28px 40px; }
+
+  /* ── CMM Header (matches existing) ── */
+  .cmm-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .cmm-header h1 {
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    margin: 0;
+  }
+  .cmm-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 7px 18px; border-radius: 3px; font-size: 14px;
+    font-family: inherit; cursor: pointer; border: none;
+    font-weight: 500; text-decoration: none;
+    transition: background .15s;
+  }
+  .cmm-btn-blue { background: var(--brand); color: #fff; }
+  .cmm-btn-blue:hover { background: var(--brand-dark); }
+  .cmm-btn-dark { background: #343a40; color: #fff; }
+  .cmm-btn-dark:hover { background: #23272b; }
+  .cmm-btn-outline-red {
+    background: #fff; color: var(--danger); border: 1px solid var(--danger);
+    padding: 6px 16px;
+  }
+  .cmm-btn-outline-red:hover { background: var(--danger-bg); }
+  .cmm-btn-outline {
+    background: #fff; color: var(--text); border: 1px solid var(--border);
+    padding: 6px 16px;
+  }
+  .cmm-btn-outline:hover { background: #f8f9fa; }
+  .cmm-btn-sm { padding: 5px 12px; font-size: 13px; }
+
+  .cmm-desc {
+    font-size: 15px; color: var(--text);
+    margin-bottom: 8px; font-weight: 400;
+  }
+  .cmm-link {
+    color: var(--link); text-decoration: none; font-size: 14px;
+    display: inline-flex; align-items: center; gap: 4px;
+    margin-bottom: 20px;
+  }
+  .cmm-link:hover { text-decoration: underline; }
+
+  /* ── Toolbar row ── */
+  .toolbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .toolbar-left { display: flex; align-items: center; gap: 10px; }
+  .clear-filters-btn {
+    background: #f8f9fa; border: 1px solid var(--border);
+    padding: 5px 14px; border-radius: 3px; font-size: 13px;
+    color: var(--text-tertiary); cursor: pointer; font-family: inherit;
+  }
+
+  /* ── Back link ── */
+  .back-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    color: var(--link); font-size: 14px; text-decoration: none;
+    margin-bottom: 18px; cursor: pointer;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  /* ── AG Grid–style table ── */
+  .ag-grid-wrapper {
+    border: 1px solid #babfc7;
+    border-radius: 0;
+    overflow: hidden;
+  }
+  table.ag-grid {
+    width: 100%; border-collapse: collapse; font-size: 14px;
+  }
+  table.ag-grid th {
+    text-align: left;
+    padding: 10px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    background: #f8f8f8;
+    border-bottom: 1px solid #babfc7;
+    border-right: 1px solid #dde2eb;
+    position: sticky; top: 0;
+    user-select: none;
+    white-space: nowrap;
+  }
+  table.ag-grid th:last-child { border-right: none; }
+  table.ag-grid td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e2e2e2;
+    border-right: 1px solid #eee;
+    vertical-align: middle;
+  }
+  table.ag-grid td:last-child { border-right: none; }
+  table.ag-grid tr:hover td { background: #f5f8ff; }
+  table.ag-grid .cmm-id {
+    color: var(--link); cursor: pointer; text-decoration: none;
+  }
+  table.ag-grid .cmm-id:hover { text-decoration: underline; }
+
+  /* Inline-editable cells */
+  .cell-editable {
+    padding: 3px 6px; border: 1px solid transparent; border-radius: 2px;
+    cursor: pointer; display: inline-block;
+  }
+  .cell-editable:hover { border-color: #babfc7; background: #f0f0f0; }
+  .cell-editable.dropdown::after { content: ' ▾'; color: #aaa; font-size: 11px; }
+
+  .cell-inline-select {
+    padding: 2px 4px; border: 1px solid #3b6bb5; border-radius: 3px;
+    font-size: 13px; font-family: inherit; background: #f0f6ff;
+    outline: none; min-width: 100px;
+  }
+
+  .row-actions { display: flex; gap: 4px; }
+  .row-actions button {
+    background: none; border: none; cursor: pointer; padding: 3px 5px;
+    border-radius: 3px; color: var(--text-tertiary); font-size: 15px;
+  }
+  .row-actions button:hover { background: #eee; color: var(--text); }
+  .row-actions button.delete:hover { color: var(--danger); }
+  .row-actions button.save-btn { color: #2e7d32; font-size: 14px; font-weight: 600; }
+  .row-actions button.save-btn:hover { background: #e8f5e9; }
+  .row-actions button.cancel-btn { color: #c62828; font-size: 14px; }
+  .row-actions button.cancel-btn:hover { background: #fce4ec; }
+
+  /* ── Cards for dimension list ── */
+  .dim-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .dim-card:hover {
+    border-color: var(--brand);
+    box-shadow: 0 2px 8px rgba(59,107,181,0.12);
+  }
+  .dim-card-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 6px;
+  }
+  .dim-card-title { font-size: 16px; font-weight: 600; color: var(--text); }
+  .dim-card-open {
+    background: none; border: none; color: var(--link);
+    font-size: 14px; cursor: pointer; font-weight: 500;
+    font-family: inherit;
+  }
+  .dim-card-open:hover { text-decoration: underline; }
+  .dim-card-desc { color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; }
+  .dim-card-meta {
+    display: flex; gap: 18px; align-items: center;
+    font-size: 13px; color: var(--text-secondary);
+  }
+  .dim-card-meta strong { color: var(--text); }
+
+  /* Field tags */
+  .field-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+  .field-tag {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 10px; border-radius: 3px; font-size: 12px; font-weight: 500;
+  }
+  .field-tag.enum { background: #dae5f5; color: #2c5a9e; }
+  .field-tag.freeform { background: #eee; color: #555; }
+
+  /* ── Chips (for enum allowed values) ── */
+  .chips { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+  .chip {
+    display: inline-flex; align-items: center;
+    padding: 4px 12px; border-radius: 3px; font-size: 13px;
+    background: var(--brand-light); color: var(--brand);
+    font-weight: 500;
+  }
+  .chip-add {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 3px;
+    background: none; border: 1px dashed var(--brand); color: var(--brand);
+    cursor: pointer; font-size: 16px; font-weight: 700;
+  }
+  .chip-add:hover { background: var(--brand-light); }
+
+  /* ── Sections ── */
+  .section { margin-bottom: 22px; }
+  .section-title {
+    font-size: 13px; font-weight: 600; color: var(--text-secondary);
+    margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px;
+  }
+
+  .field-values-section {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    background: #fafbfc;
+  }
+  .field-value-row {
+    display: flex; align-items: center; gap: 12px; padding: 8px 0;
+  }
+  .field-value-row:not(:last-child) { border-bottom: 1px solid #eee; }
+  .field-value-row .label { font-weight: 600; font-size: 14px; min-width: 160px; }
+  .type-badge {
+    font-size: 11px; padding: 1px 7px; border-radius: 3px; font-weight: 600;
+  }
+  .type-badge.enum { background: #dae5f5; color: #2c5a9e; }
+  .type-badge.freeform { background: #eee; color: #616161; }
+  .freeform-note { color: var(--text-tertiary); font-size: 13px; font-style: italic; }
+
+  /* ── Grid toolbar ── */
+  .grid-toolbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px; background: #f8f8f8;
+    border-bottom: 1px solid #babfc7;
+  }
+  .grid-toolbar .left { display: flex; align-items: center; gap: 12px; }
+  .grid-toolbar .count { font-size: 14px; color: var(--text-secondary); }
+  .search-box {
+    padding: 5px 10px 5px 30px; border: 1px solid var(--border);
+    border-radius: 3px; font-size: 13px; width: 230px; font-family: inherit;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%23adb5bd' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 10-1.397 1.398h-.001l3.85 3.85a1 1 0 001.415-1.414l-3.85-3.85zm-5.242.156a5 5 0 110-10 5 5 0 010 10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: 9px center;
+  }
+  .search-box:focus { outline: none; border-color: var(--brand); }
+
+  /* ── Detail header ── */
+  .detail-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 18px;
+  }
+  .detail-header h1 { font-size: 26px; font-weight: 400; }
+  .detail-header .actions { display: flex; gap: 8px; }
+
+  /* ── Side panel ── */
+  .panel-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.35); z-index: 100; display: none;
+  }
+  .panel-overlay.show { display: block; }
+  .side-panel {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 400px; background: #fff; z-index: 101;
+    box-shadow: -2px 0 12px rgba(0,0,0,0.15);
+    display: flex; flex-direction: column;
+    transform: translateX(100%); transition: transform .2s ease;
+  }
+  .panel-overlay.show .side-panel { transform: translateX(0); }
+  .panel-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 22px; border-bottom: 1px solid var(--border);
+  }
+  .panel-header h2 { font-size: 18px; font-weight: 600; }
+  .panel-close {
+    background: none; border: none; font-size: 18px; cursor: pointer;
+    color: var(--text-secondary);
+  }
+  .panel-body { padding: 18px 22px; flex: 1; overflow-y: auto; }
+  .panel-body .add-row { display: flex; gap: 8px; margin-bottom: 18px; }
+  .panel-body .add-row input {
+    flex: 1; padding: 7px 12px; border: 1px solid var(--border);
+    border-radius: 3px; font-size: 14px; font-family: inherit;
+  }
+  .panel-body .add-row input:focus { outline: none; border-color: var(--brand); }
+  .owner-list-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid #eee;
+  }
+  .owner-info .name { font-size: 14px; font-weight: 500; }
+  .owner-info .date { font-size: 12px; color: var(--text-tertiary); }
+  .owner-remove {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-tertiary); font-size: 16px;
+  }
+  .owner-remove:hover { color: var(--danger); }
+
+  /* ── Dialog ── */
+  .dialog-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.35); z-index: 200;
+    display: none; justify-content: center; align-items: center;
+  }
+  .dialog-overlay.show { display: flex; }
+  .dialog {
+    background: #fff; border-radius: 6px;
+    box-shadow: var(--shadow-lg); width: 500px; max-width: 90vw;
+    max-height: 80vh; overflow-y: auto;
+  }
+  .dialog-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 22px 10px;
+  }
+  .dialog-header h2 { font-size: 18px; font-weight: 600; }
+  .dialog-body { padding: 0 22px 18px; }
+  .dialog-footer {
+    display: flex; justify-content: flex-end; gap: 8px;
+    padding: 14px 22px; border-top: 1px solid var(--border);
+  }
+
+  /* ── Forms ── */
+  .form-group { margin-bottom: 14px; }
+  .form-group label {
+    display: block; font-size: 14px; font-weight: 600; margin-bottom: 4px;
+  }
+  .form-group label .required { color: var(--danger); }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 7px 12px; border: 1px solid var(--border);
+    border-radius: 3px; font-size: 14px; font-family: inherit;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--brand);
+  }
+  .form-group .hint { font-size: 12px; color: var(--text-tertiary); margin-top: 3px; }
+
+  /* ── Create page ── */
+  .schema-builder {
+    background: #f8f9fa; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px; margin-top: 6px;
+  }
+  .schema-field-row {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 3px; padding: 12px 14px; margin-bottom: 8px;
+  }
+  .schema-field-row .field-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+  }
+  .schema-field-row .field-num { font-weight: 600; font-size: 13px; color: var(--text-secondary); }
+  .btn-icon {
+    padding: 4px; border-radius: 3px; background: none; border: none;
+    cursor: pointer; color: var(--text-tertiary); font-size: 14px;
+  }
+  .btn-icon:hover { background: #eee; color: var(--text); }
+  .schema-field-row .field-inputs {
+    display: grid; grid-template-columns: 1fr 130px; gap: 8px;
+  }
+  .schema-field-row .field-inputs input,
+  .schema-field-row .field-inputs select {
+    padding: 5px 10px; border: 1px solid var(--border);
+    border-radius: 3px; font-size: 13px; font-family: inherit;
+  }
+  .schema-field-row .initial-values { margin-top: 6px; }
+  .schema-field-row .initial-values label {
+    font-size: 12px; color: var(--text-secondary); margin-bottom: 3px; display: block; font-weight: 500;
+  }
+  .schema-field-row .initial-values input {
+    padding: 5px 10px; border: 1px solid var(--border);
+    border-radius: 3px; font-size: 13px; width: 100%; font-family: inherit;
+  }
+  .owners-builder { margin-top: 6px; }
+  .owners-builder .add-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .owners-builder .add-row input {
+    flex: 1; padding: 7px 12px; border: 1px solid var(--border);
+    border-radius: 3px; font-size: 14px; font-family: inherit;
+  }
+  .owner-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 8px 3px 12px; border-radius: 3px;
+    background: #eee; font-size: 13px; margin: 0 5px 5px 0;
+  }
+  .owner-chip button {
+    background: none; border: none; cursor: pointer; font-size: 13px;
+    color: var(--text-tertiary); line-height: 1;
+  }
+  .owner-chip button:hover { color: var(--danger); }
+
+  .warning-banner {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 10px 14px; background: #fff3cd; border: 1px solid #ffc107;
+    border-radius: 3px; font-size: 13px; color: #664d03; margin: 18px 0;
+  }
+
+  /* ── Utilities ── */
+  .hidden { display: none !important; }
+
+  .page-indicator {
+    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+    background: #343a40; color: #fff; padding: 7px 18px;
+    border-radius: 3px; font-size: 12px; z-index: 999;
+    box-shadow: var(--shadow-lg);
+  }
+  .page-indicator strong { color: #8ec8f8; }
+</style>
+</head>
+<body>
+
+<!-- Mockup page switcher (rendered dynamically) -->
+<div class="mockup-switcher" id="mockup-switcher"></div>
+
+<!-- ==================== PAGE 0: CMM LANDING (existing + new button) ==================== -->
+<div id="page-landing" class="container">
+  <div class="cmm-header">
+    <h1>Campaign Metadata Manager (CMM)</h1>
+    <button class="cmm-btn cmm-btn-blue">Create +</button>
+    <button class="cmm-btn cmm-btn-blue">Bulk Create +</button>
+    <button class="cmm-btn cmm-btn-dark" onclick="showPage('list')" style="background: #5a3d8a;">Reporting Groups</button>
+  </div>
+
+  <p class="cmm-desc">Create CMM IDs for instrumentation in customer facing experiences, facilitating IDEAS attribution and reporting scenarios.</p>
+
+  <a class="cmm-link" href="#">More information ⓘ</a>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button class="clear-filters-btn">Clear All Filters</button>
+    </div>
+    <button class="cmm-btn cmm-btn-outline-red cmm-btn-sm">Download as CSV ↓</button>
+  </div>
+
+  <div class="ag-grid-wrapper">
+    <table class="ag-grid">
+      <thead>
+        <tr>
+          <th style="width: 140px;">CMM ID</th>
+          <th>CMM URL</th>
+          <th style="width: 140px;">Product Group</th>
+          <th style="width: 130px;">Product</th>
+          <th style="width: 120px;">Audience</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><a class="cmm-id">cmmd18i8pdc</a></td><td style="color:#adb5bd;">—</td><td>Copilot</td><td>Copilot Chat</td><td>Commercial</td></tr>
+        <tr><td><a class="cmm-id">cmmd21qqbwx</a></td><td style="color:#adb5bd;">—</td><td>Copilot</td><td>Copilot Chat</td><td>Commercial</td></tr>
+        <tr><td><a class="cmm-id">cmmni75uzld</a></td><td style="color:#adb5bd;">—</td><td>Copilot</td><td>Copilot Chat</td><td>Commercial</td></tr>
+        <tr><td><a class="cmm-id">cmm30qf6qis</a></td><td style="color:#adb5bd;">—</td><td>Copilot</td><td>Copilot Chat</td><td>Commercial</td></tr>
+        <tr><td><a class="cmm-id">cmmgtuc0141</a></td><td style="color:#adb5bd;">—</td><td>Copilot</td><td>Copilot Chat</td><td>Commercial</td></tr>
+        <tr><td><a class="cmm-id">cmmxjhamy22</a></td><td style="color:#adb5bd;">—</td><td>Copilot</td><td>Copilot Chat</td><td>Commercial</td></tr>
+        <tr><td><a class="cmm-id">cmmah9bp5xv</a></td><td style="color:#adb5bd;">—</td><td>Copilot</td><td>Copilot Chat</td><td>Commercial</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== PAGE 1: REPORTING GROUPS LIST ==================== -->
+<div id="page-list" class="container hidden">
+  <a class="back-link" onclick="showPage('landing')">◂ Back to CMM</a>
+
+  <div class="cmm-header">
+    <h1>Reporting Groups</h1>
+  </div>
+  <p class="cmm-desc">Manage reporting groups and mappings to CMM IDs</p>
+  <a class="cmm-link" href="#">More information ⓘ</a>
+
+  <div id="list-cards"></div>
+
+  <!-- Admin create (P1) -->
+  <div style="margin-top: 14px; padding: 14px; border: 2px dashed var(--border); border-radius: var(--radius); text-align: center;">
+    <button class="cmm-btn cmm-btn-blue" onclick="showPage('create')">+ Create New Group</button>
+    <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 5px;">Admin only · P1 feature</div>
+  </div>
+</div>
+
+<!-- ==================== PAGE 2: GROUP DETAIL (shared) ==================== -->
+<div id="page-detail" class="container hidden">
+  <a class="back-link" onclick="showPage('list')">◂ Back to Reporting Groups</a>
+
+  <div class="detail-header">
+    <div>
+      <h1 id="detail-group-name"></h1>
+      <p id="detail-group-desc" style="color: var(--text-secondary); font-size: 14px; margin-top: 3px;"></p>
+    </div>
+    <div class="actions">
+      <button class="cmm-btn cmm-btn-dark" onclick="openOwnerPanel()">Manage Owners</button>
+      <button class="cmm-btn cmm-btn-blue" onclick="openAddMappingDialog()">+ Add Mapping</button>
+    </div>
+  </div>
+
+  <!-- Owners -->
+  <div class="section">
+    <div class="section-title">Owners</div>
+    <div id="detail-owners" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+  </div>
+
+  <!-- Field Value Management -->
+  <div class="section">
+    <div class="section-title">Field Value Management</div>
+    <div class="field-values-section" id="detail-field-values"></div>
+  </div>
+
+  <!-- Mappings Grid -->
+  <div class="section" id="detail-grid"></div>
+</div>
+
+<!-- ==================== PAGE 3: CREATE GROUP (P1) ==================== -->
+<div id="page-create" class="container hidden">
+  <a class="back-link" onclick="showPage('list')">◂ Back to Reporting Groups</a>
+
+  <div class="cmm-header">
+    <h1>Create New Reporting Group</h1>
+  </div>
+  <p class="cmm-desc">Define a new reporting group with its schema and initial owners</p>
+  <br>
+
+  <div style="max-width: 660px;">
+    <div class="form-group">
+      <label>Name <span class="required">*</span></label>
+      <input type="text" placeholder="e.g., Campaign Scenarios" value="Campaign Scenarios">
+      <div class="hint">Must be unique. Cannot be changed after creation.</div>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea rows="2" placeholder="Describe the purpose of this group…">Maps CMM IDs to scenario groups and scenario names</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Schema Fields <span class="required">*</span></label>
+      <div class="schema-builder">
+        <div class="schema-field-row">
+          <div class="field-header">
+            <span class="field-num">Field 1</span>
+            <button class="btn-icon" title="Remove field">✕</button>
+          </div>
+          <div class="field-inputs">
+            <input type="text" placeholder="Field name" value="Scenario Group">
+            <select><option selected>Enum</option><option>Freeform</option></select>
+          </div>
+          <div class="initial-values">
+            <label>Initial values (comma-separated)</label>
+            <input type="text" placeholder="e.g., Brand, Performance, Awareness" value="Brand, Performance, Awareness, Consideration">
+          </div>
+        </div>
+        <div class="schema-field-row">
+          <div class="field-header">
+            <span class="field-num">Field 2</span>
+            <button class="btn-icon" title="Remove field">✕</button>
+          </div>
+          <div class="field-inputs">
+            <input type="text" placeholder="Field name" value="Scenario Name">
+            <select><option>Enum</option><option selected>Freeform</option></select>
+          </div>
+        </div>
+        <button class="cmm-btn cmm-btn-outline cmm-btn-sm" style="margin-top: 4px;">+ Add Field</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Owners <span class="required">*</span></label>
+      <div class="owners-builder">
+        <div class="add-row">
+          <input type="text" placeholder="Search for a user (e.g., owner@microsoft.com)">
+          <button class="cmm-btn cmm-btn-outline cmm-btn-sm">Add</button>
+        </div>
+        <div>
+          <span class="owner-chip">owner1@microsoft.com <button>✕</button></span>
+          <span class="owner-chip">owner2@microsoft.com <button>✕</button></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-banner">
+      <span>⚠️</span>
+      <span>Once created, the group name and schema fields cannot be changed. Enum field values are append-only — you can add new values later but cannot remove or modify existing ones.</span>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
+      <button class="cmm-btn cmm-btn-outline" onclick="showPage('list')">Cancel</button>
+      <button class="cmm-btn cmm-btn-blue" onclick="showPage('list')">Create Group</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== OWNERS SIDE PANEL ==================== -->
+<div id="owner-panel" class="panel-overlay" onclick="closeOwnerPanel()">
+  <div class="side-panel" onclick="event.stopPropagation()">
+    <div class="panel-header">
+      <h2>Manage Owners</h2>
+      <button class="panel-close" onclick="closeOwnerPanel()">✕</button>
+    </div>
+    <div class="panel-body" id="owner-panel-body"></div>
+  </div>
+</div>
+
+<!-- ==================== ADD MAPPING DIALOG ==================== -->
+<div id="add-mapping-dialog" class="dialog-overlay" onclick="closeAddMappingDialog()">
+  <div class="dialog" onclick="event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>Add CMM ID Mapping</h2>
+      <button class="panel-close" onclick="closeAddMappingDialog()">✕</button>
+    </div>
+    <div class="dialog-body">
+      <div class="form-group">
+        <label>CMM ID(s) <span class="required">*</span></label>
+        <textarea id="mapping-cmm-ids" rows="3" placeholder="Enter one or more CMM IDs, separated by commas (e.g., cmmabc12345, cmmdef67890, cmmghi11223)"></textarea>
+        <div class="hint">Paste a comma-separated list of CMM IDs to map them all to the same field values</div>
+      </div>
+      <div id="mapping-fields-container"></div>
+    </div>
+    <!-- Override Warning Banner (hidden by default) -->
+    <div id="override-warning" style="display:none; margin: 0 24px 16px; padding: 12px 16px; background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px;">
+      <div style="display: flex; align-items: flex-start; gap: 8px;">
+        <span style="font-size: 18px; line-height: 1;">⚠️</span>
+        <div>
+          <div style="font-weight: 600; color: #8d6e00; margin-bottom: 4px;">Duplicate CMM IDs detected</div>
+          <div style="font-size: 13px; color: #6d5600; margin-bottom: 6px;">The following CMM IDs are already mapped to this reporting group. Saving will <strong>override their existing mappings</strong>:</div>
+          <div id="override-ids" style="font-family: 'Consolas', monospace; font-size: 12px; color: #5d4600; background: #fff3cd; padding: 6px 10px; border-radius: 4px; margin-bottom: 8px;"></div>
+          <div style="font-size: 12px; color: #8d6e00;">Do you want to continue and override?</div>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-footer" id="mapping-footer-default">
+      <button class="cmm-btn cmm-btn-outline" onclick="closeAddMappingDialog()">Cancel</button>
+      <button class="cmm-btn cmm-btn-blue" onclick="checkForOverrides()">Save Mapping</button>
+    </div>
+    <div class="dialog-footer" id="mapping-footer-confirm" style="display:none;">
+      <button class="cmm-btn cmm-btn-outline" onclick="closeAddMappingDialog()">Cancel</button>
+      <button class="cmm-btn cmm-btn-blue" onclick="confirmOverride()" style="background:#d48806; border-color:#d48806;">Override &amp; Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== EDIT MAPPING CONFIRM DIALOG ==================== -->
+<div id="edit-confirm-dialog" class="dialog-overlay" onclick="cancelEdit()">
+  <div class="dialog" style="width: 460px;" onclick="event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>Confirm Mapping Change</h2>
+      <button class="panel-close" onclick="cancelEdit()">✕</button>
+    </div>
+    <div class="dialog-body">
+      <div style="padding: 4px 0 12px; font-size: 13px; color: var(--text-secondary);">You are about to change the mapping for:</div>
+      <div id="edit-confirm-cmmid" style="font-family: 'Consolas', monospace; font-size: 13px; font-weight: 600; margin-bottom: 14px; color: var(--primary);"></div>
+      <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+        <thead><tr style="background: #f8f8f8;">
+          <th style="padding: 6px 10px; text-align: left; font-weight: 600; border: 1px solid #e0e0e0;">Field</th>
+          <th style="padding: 6px 10px; text-align: left; font-weight: 600; border: 1px solid #e0e0e0;">Current</th>
+          <th style="padding: 6px 10px; text-align: left; font-weight: 600; border: 1px solid #e0e0e0;">New</th>
+        </tr></thead>
+        <tbody id="edit-confirm-changes"></tbody>
+      </table>
+    </div>
+    <div class="dialog-footer">
+      <button class="cmm-btn cmm-btn-outline" onclick="cancelEdit()">Cancel</button>
+      <button class="cmm-btn cmm-btn-blue" onclick="applyEdit()">Approve &amp; Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ADD FIELD VALUE DIALOG ==================== -->
+<div id="add-value-dialog" class="dialog-overlay" onclick="closeAddValueDialog()">
+  <div class="dialog" style="width: 440px;" onclick="event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>Add Allowed Values</h2>
+      <button class="panel-close" onclick="closeAddValueDialog()">✕</button>
+    </div>
+    <div class="dialog-body">
+      <div class="form-group">
+        <label>Field: <strong id="add-value-field-name">—</strong></label>
+      </div>
+      <div class="form-group">
+        <label>New Value</label>
+        <div style="display:flex; gap:8px;">
+          <input id="add-value-input" type="text" placeholder="Type a value and press Enter or click +" style="flex:1;">
+          <button class="cmm-btn cmm-btn-blue" onclick="stageValue()" style="white-space:nowrap; padding:6px 12px;">+</button>
+        </div>
+        <div class="hint">Add values one at a time. Click "Confirm &amp; Save" when done.</div>
+      </div>
+      <!-- Staged new values -->
+      <div id="staged-values-section" style="display:none; margin-top:12px;">
+        <div class="section-title" style="font-size: 12px; color:#2e7d32;">New Values to Add</div>
+        <div id="staged-values-list" style="max-height:150px; overflow-y:auto; margin-top:4px; border:1px solid #a5d6a7; border-radius:4px; background:#f6fdf6;"></div>
+      </div>
+      <div style="margin-top: 12px;">
+        <div class="section-title" style="font-size: 12px;">Current Values</div>
+        <select id="add-value-current" style="width:100%; padding:5px 10px; border:1px solid var(--border); border-radius:3px; font-size:13px; font-family:inherit;" size="4">
+        </select>
+        <div id="add-value-empty" style="display:none; font-size:12px; color:var(--text-tertiary); padding:6px 0; font-style:italic;">No values defined yet</div>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="cmm-btn cmm-btn-outline" onclick="closeAddValueDialog()">Cancel</button>
+      <button id="confirm-values-btn" class="cmm-btn cmm-btn-blue" onclick="confirmAddValues()" style="display:none;">Confirm &amp; Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Page indicator -->
+<div class="page-indicator" id="page-indicator">
+  Viewing: <strong>CMM Landing (existing + new button)</strong>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   DATA MODEL — single source of truth
+   ══════════════════════════════════════════════ */
+var DATA = {
+  groups: [
+    {
+      id: 'copilot-growth',
+      name: 'Copilot Growth Initiatives',
+      description: 'Initiative categorization for Copilot growth campaigns',
+      createdDate: 'Apr 2, 2026',
+      createdBy: 'admin@microsoft.com',
+      owners: [
+        { name: 'Admin User', email: 'admin@microsoft.com', addedDate: 'Apr 2, 2026', addedBy: 'admin@microsoft.com' }
+      ],
+      fields: [
+        { name: 'Initiative', type: 'enum', values: [] }
+      ],
+      mappings: []
+    },
+    {
+      id: 'reporting-segments',
+      name: 'Reporting Segments',
+      description: 'Custom segment assignments for reporting rollups',
+      createdDate: 'Feb 3, 2026',
+      createdBy: 'admin@microsoft.com',
+      owners: [
+        { name: 'Jane Smith', email: 'owner1@microsoft.com', addedDate: 'Jan 15, 2026', addedBy: 'admin@microsoft.com' },
+        { name: 'Alex Johnson', email: 'owner2@microsoft.com', addedDate: 'Feb 1, 2026', addedBy: 'owner1@microsoft.com' }
+      ],
+      fields: [
+        { name: 'Segment', type: 'enum', values: ['Enterprise', 'SMB', 'Consumer', 'Education'] },
+        { name: 'Sub-Segment', type: 'enum', values: ['Fortune 500', 'Mid-Market', 'Startup', 'K-12', 'Higher Ed'] }
+      ],
+      mappings: [
+        { cmmId: 'cmmabc12345', scenarioName: 'Holiday Q4 Push', fieldValues: { 'Segment': 'Enterprise', 'Sub-Segment': 'Fortune 500' }, modifiedBy: 'owner1@microsoft.com', modifiedDate: 'Feb 10, 2026' },
+        { cmmId: 'cmmdef67890', scenarioName: 'Spring Promo', fieldValues: { 'Segment': 'SMB', 'Sub-Segment': 'Mid-Market' }, modifiedBy: 'owner2@microsoft.com', modifiedDate: 'Feb 11, 2026' },
+        { cmmId: 'cmmghi24680', scenarioName: 'Back to School', fieldValues: { 'Segment': 'Consumer', 'Sub-Segment': 'Startup' }, modifiedBy: 'owner1@microsoft.com', modifiedDate: 'Feb 15, 2026' },
+        { cmmId: 'cmmjkl13579', scenarioName: 'Surface Pro Launch', fieldValues: { 'Segment': 'Education', 'Sub-Segment': 'K-12' }, modifiedBy: 'owner1@microsoft.com', modifiedDate: 'Feb 20, 2026' },
+        { cmmId: 'cmmmno97531', scenarioName: 'Xbox Game Pass Summer', fieldValues: { 'Segment': 'Enterprise', 'Sub-Segment': 'Mid-Market' }, modifiedBy: 'owner2@microsoft.com', modifiedDate: 'Mar 1, 2026' },
+        { cmmId: 'cmmpqr86420', scenarioName: 'Azure Migration Campaign', fieldValues: { 'Segment': 'Education', 'Sub-Segment': 'Higher Ed' }, modifiedBy: 'owner1@microsoft.com', modifiedDate: 'Mar 5, 2026' }
+      ]
+    },
+    {
+      id: 'revenue-attribution',
+      name: 'Revenue Attribution',
+      description: 'Revenue line and business unit assignments for financial reporting',
+      createdDate: 'Mar 1, 2026',
+      createdBy: 'admin@microsoft.com',
+      owners: [
+        { name: 'Sarah Lee', email: 'sarah@microsoft.com', addedDate: 'Mar 1, 2026', addedBy: 'admin@microsoft.com' },
+        { name: 'Mike Chen', email: 'mike@microsoft.com', addedDate: 'Mar 2, 2026', addedBy: 'admin@microsoft.com' },
+        { name: 'Emily Davis', email: 'emily@microsoft.com', addedDate: 'Mar 5, 2026', addedBy: 'sarah@microsoft.com' },
+        { name: 'Tom Wilson', email: 'tom@microsoft.com', addedDate: 'Mar 10, 2026', addedBy: 'sarah@microsoft.com' }
+      ],
+      fields: [
+        { name: 'Revenue Line', type: 'enum', values: ['Product', 'Services', 'Licensing'] },
+        { name: 'Business Unit', type: 'enum', values: ['Cloud', 'Devices', 'Gaming'] },
+        { name: 'Notes', type: 'freeform', values: [] }
+      ],
+      mappings: []
+    }
+  ]
+};
+
+/* ── State ── */
+var currentPage = 'landing';
+var currentGroupId = null;
+var stagedValues = [];
+var activeFieldName = null;
+var editingRowIndex = null;
+var originalValues = {};
+var pendingEdit = null;
+
+/* ── Helpers ── */
+function getGroup(id) {
+  for (var i = 0; i < DATA.groups.length; i++) {
+    if (DATA.groups[i].id === id) return DATA.groups[i];
+  }
+  return null;
+}
+
+function getMappingCountForCard(group) {
+  if (group.id === 'revenue-attribution') return 214;
+  return group.mappings.length;
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/* ── Page Navigation ── */
+function showPage(page, groupId) {
+  currentPage = page;
+  if (groupId) currentGroupId = groupId;
+  editingRowIndex = null;
+  pendingEdit = null;
+  render();
+}
+
+function render() {
+  renderSwitcher();
+  ['landing', 'list', 'detail', 'create'].forEach(function(p) {
+    document.getElementById('page-' + p).classList.add('hidden');
+  });
+  document.getElementById('page-' + currentPage).classList.remove('hidden');
+  if (currentPage === 'list') renderList();
+  if (currentPage === 'detail') renderDetail(currentGroupId);
+  renderPageIndicator();
+  window.scrollTo(0, 0);
+}
+
+/* ── Mockup Switcher ── */
+function renderSwitcher() {
+  var el = document.getElementById('mockup-switcher');
+  var html = '';
+  html += '<button class="' + (currentPage === 'landing' ? 'active' : '') + '" onclick="showPage(\'landing\')">CMM Landing</button>';
+  DATA.groups.forEach(function(g) {
+    var active = (currentPage === 'detail' && currentGroupId === g.id) ? 'active' : '';
+    var label = g.name.length > 25 ? g.name.substring(0, 22) + '…' : g.name;
+    html += '<button class="' + active + '" onclick="showPage(\'detail\', \'' + g.id + '\')">' + label + '</button>';
+  });
+  html += '<button class="' + (currentPage === 'create' ? 'active' : '') + '" onclick="showPage(\'create\')">Create Group (P1)</button>';
+  el.innerHTML = html;
+}
+
+/* ── Page Indicator ── */
+function renderPageIndicator() {
+  var label;
+  if (currentPage === 'landing') label = 'CMM Landing (existing + new button)';
+  else if (currentPage === 'list') label = 'Groups List';
+  else if (currentPage === 'create') label = 'Create Group (P1)';
+  else if (currentPage === 'detail' && currentGroupId) {
+    var g = getGroup(currentGroupId);
+    label = (g ? g.name : '') + ' — Group Detail';
+  } else { label = ''; }
+  document.getElementById('page-indicator').innerHTML = 'Viewing: <strong>' + label + '</strong>';
+}
+
+/* ── Groups List ── */
+function renderList() {
+  var el = document.getElementById('list-cards');
+  var html = '';
+  DATA.groups.forEach(function(g) {
+    var mc = getMappingCountForCard(g);
+    var oc = g.owners.length;
+    html += '<div class="dim-card" onclick="showPage(\'detail\', \'' + g.id + '\')">';
+    html += '<div class="dim-card-header">';
+    html += '<span class="dim-card-title">' + g.name + '</span>';
+    html += '<button class="dim-card-open">Open ▸</button>';
+    html += '</div>';
+    html += '<div class="dim-card-desc">' + g.description + '</div>';
+    html += '<div class="field-tags">';
+    g.fields.forEach(function(f) {
+      html += '<span class="field-tag ' + f.type + '">' + f.name + ' (' + f.type + ')</span>';
+    });
+    html += '</div>';
+    html += '<div class="dim-card-meta">';
+    html += '<span><strong>' + mc + '</strong> mapping' + (mc !== 1 ? 's' : '') + '</span>';
+    html += '<span><strong>' + oc + '</strong> owner' + (oc !== 1 ? 's' : '') + '</span>';
+    html += '<span>Created ' + g.createdDate + ' by ' + g.createdBy + '</span>';
+    html += '</div>';
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
+
+/* ── Group Detail ── */
+function renderDetail(groupId) {
+  var group = getGroup(groupId);
+  if (!group) return;
+  document.getElementById('detail-group-name').textContent = group.name;
+  document.getElementById('detail-group-desc').textContent = group.description;
+
+  // Owners badges
+  var oh = '';
+  group.owners.forEach(function(o) {
+    oh += '<span title="' + o.email + '" style="display:inline-flex; align-items:center; gap:5px; padding:5px 12px; background:#f8f9fa; border:1px solid var(--border); border-radius:3px; font-size:13px; cursor:default;">👤 ' + o.name + '</span>';
+  });
+  document.getElementById('detail-owners').innerHTML = oh;
+
+  // Field values
+  renderFieldValues(group);
+
+  // Mappings grid
+  renderMappingsGrid(group);
+}
+
+function renderFieldValues(group) {
+  var html = '';
+  group.fields.forEach(function(f) {
+    html += '<div class="field-value-row">';
+    html += '<div class="label">' + f.name + ' <span class="type-badge ' + f.type + '">' + f.type + '</span></div>';
+    if (f.type === 'enum') {
+      html += '<div style="display:flex; align-items:center; gap:8px;">';
+      html += '<select data-field-name="' + f.name + '" style="padding:5px 10px; border:1px solid var(--border); border-radius:3px; font-size:13px; font-family:inherit; min-width:200px;';
+      if (f.values.length === 0) html += ' color:var(--text-secondary);';
+      html += '">';
+      if (f.values.length === 0) {
+        html += '<option value="" disabled selected>No values defined yet</option>';
+      } else {
+        f.values.forEach(function(v) { html += '<option>' + v + '</option>'; });
+      }
+      html += '</select>';
+      html += '<button class="chip-add" title="Add new value" onclick="openAddValueDialog(\'' + group.id + '\', \'' + f.name.replace(/'/g, "\\'") + '\')">+</button>';
+      html += '</div>';
+    } else {
+      html += '<span class="freeform-note">Free-text input at mapping time</span>';
+    }
+    html += '</div>';
+  });
+  document.getElementById('detail-field-values').innerHTML = html;
+}
+
+function renderMappingsGrid(group) {
+  var mappings = group.mappings;
+  var allFields = group.fields;
+  var colCount = allFields.length + 5;
+
+  var thHtml = '<th style="width:140px;">CMM ID</th><th>Scenario Name</th>';
+  allFields.forEach(function(f) { thHtml += '<th>' + f.name + '</th>'; });
+  thHtml += '<th>Modified By</th><th style="width:120px;">Modified Date</th><th style="width:70px;"></th>';
+
+  if (mappings.length === 0) {
+    document.getElementById('detail-grid').innerHTML =
+      '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">' +
+      '<div class="section-title" style="margin-bottom:0;">CMM ID Mappings</div>' +
+      '<span style="font-size:12px; color:var(--text-tertiary);">0 mapped IDs</span>' +
+      '</div>' +
+      '<div class="detail-grid-container"><div style="overflow-x:auto;">' +
+      '<table class="ag-grid"><thead><tr>' + thHtml + '</tr></thead>' +
+      '<tbody><tr><td colspan="' + colCount + '" style="text-align:center; padding:40px 20px; color:var(--text-tertiary);">' +
+      '<div style="font-size:32px; margin-bottom:8px;">📋</div>' +
+      '<div style="font-size:14px; font-weight:500; margin-bottom:4px;">No CMM IDs mapped yet</div>' +
+      '<div style="font-size:13px;">Click <strong>"+ Add Mapping"</strong> above to add your first mapping</div>' +
+      '</td></tr></tbody></table></div></div>';
+    return;
+  }
+
+  var rowsHtml = '';
+  mappings.forEach(function(m, idx) {
+    var bgStyle = m._highlight ? ' style="background:#eef6ff;"' : '';
+    rowsHtml += '<tr data-mapping-idx="' + idx + '"' + bgStyle + '>';
+    rowsHtml += '<td><a class="cmm-id">' + m.cmmId + '</a></td>';
+    rowsHtml += '<td>' + m.scenarioName + '</td>';
+    allFields.forEach(function(f) {
+      var val = m.fieldValues[f.name] || '—';
+      if (f.type === 'enum') {
+        rowsHtml += '<td><span class="cell-editable dropdown">' + val + '</span></td>';
+      } else {
+        rowsHtml += '<td>' + val + '</td>';
+      }
+    });
+    rowsHtml += '<td>' + m.modifiedBy + '</td>';
+    rowsHtml += '<td>' + m.modifiedDate + '</td>';
+    rowsHtml += '<td><div class="row-actions"><button title="Edit">✏️</button><button class="delete" title="Delete">🗑️</button></div></td>';
+    rowsHtml += '</tr>';
+  });
+
+  document.getElementById('detail-grid').innerHTML =
+    '<div class="section-title">CMM ID Mappings</div>' +
+    '<div class="ag-grid-wrapper">' +
+    '<div class="grid-toolbar">' +
+    '<div class="left">' +
+    '<span class="count"><strong>' + mappings.length + '</strong> mappings</span>' +
+    '<input type="text" class="search-box" placeholder="Search by CMM ID or field values…">' +
+    '</div>' +
+    '<div style="display:flex; gap:8px;">' +
+    '<button class="cmm-btn cmm-btn-outline-red cmm-btn-sm">Download as CSV ↓</button>' +
+    '<button class="cmm-btn cmm-btn-blue cmm-btn-sm" onclick="openAddMappingDialog()">+ Add Mapping</button>' +
+    '</div>' +
+    '</div>' +
+    '<div style="overflow-x:auto;">' +
+    '<table class="ag-grid"><thead><tr>' + thHtml + '</tr></thead>' +
+    '<tbody id="mappings-tbody">' + rowsHtml + '</tbody></table></div></div>';
+}
+
+/* ── Owners Panel ── */
+function openOwnerPanel() {
+  renderOwnerPanel();
+  document.getElementById('owner-panel').classList.add('show');
+}
+
+function closeOwnerPanel() {
+  document.getElementById('owner-panel').classList.remove('show');
+}
+
+function renderOwnerPanel() {
+  var group = getGroup(currentGroupId);
+  if (!group) return;
+  var html = '';
+  html += '<div class="add-row">';
+  html += '<input id="owner-email-input" type="text" placeholder="Search for a user…">';
+  html += '<button class="cmm-btn cmm-btn-blue cmm-btn-sm" onclick="addOwner()">Add</button>';
+  html += '</div><div>';
+  group.owners.forEach(function(o, idx) {
+    html += '<div class="owner-list-item">';
+    html += '<div class="owner-info">';
+    html += '<div class="name">' + o.name + ' (' + o.email + ')</div>';
+    html += '<div class="date">Added ' + o.addedDate + ' by ' + o.addedBy + '</div>';
+    html += '</div>';
+    html += '<button class="owner-remove" title="Remove owner" onclick="removeOwner(' + idx + ')">✕</button>';
+    html += '</div>';
+  });
+  html += '</div>';
+  html += '<div style="margin-top: 14px; font-size: 12px; color: var(--text-tertiary);">⚠ A group must always have at least one owner. The last owner cannot be removed.</div>';
+  document.getElementById('owner-panel-body').innerHTML = html;
+}
+
+function addOwner() {
+  var input = document.getElementById('owner-email-input');
+  var email = input.value.trim();
+  if (!email) return;
+  var group = getGroup(currentGroupId);
+  if (!group) return;
+  for (var i = 0; i < group.owners.length; i++) {
+    if (group.owners[i].email === email) { input.value = ''; return; }
+  }
+  var today = new Date();
+  var dateStr = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  group.owners.push({ name: email.split('@')[0], email: email, addedDate: dateStr, addedBy: 'you@microsoft.com' });
+  input.value = '';
+  renderOwnerPanel();
+  renderDetail(currentGroupId);
+}
+
+function removeOwner(idx) {
+  var group = getGroup(currentGroupId);
+  if (!group || group.owners.length <= 1) { alert('A group must always have at least one owner.'); return; }
+  group.owners.splice(idx, 1);
+  renderOwnerPanel();
+  renderDetail(currentGroupId);
+}
+
+/* ── Add Mapping Dialog ── */
+function openAddMappingDialog() {
+  populateMappingFields();
+  document.getElementById('add-mapping-dialog').classList.add('show');
+  document.getElementById('override-warning').style.display = 'none';
+  document.getElementById('mapping-footer-default').style.display = '';
+  document.getElementById('mapping-footer-confirm').style.display = 'none';
+  var ta = document.getElementById('mapping-cmm-ids');
+  if (ta) ta.value = '';
+}
+
+function closeAddMappingDialog() {
+  document.getElementById('add-mapping-dialog').classList.remove('show');
+  document.getElementById('override-warning').style.display = 'none';
+  document.getElementById('mapping-footer-default').style.display = '';
+  document.getElementById('mapping-footer-confirm').style.display = 'none';
+}
+
+function populateMappingFields() {
+  var group = getGroup(currentGroupId);
+  if (!group) return;
+  var container = document.getElementById('mapping-fields-container');
+  var html = '';
+  group.fields.forEach(function(f) {
+    html += '<div class="form-group">';
+    html += '<label>' + f.name + ' <span class="required">*</span> <span class="type-badge ' + f.type + '">' + f.type + '</span></label>';
+    if (f.type === 'enum') {
+      html += '<select data-field="' + f.name + '">';
+      html += '<option value="">Select a value…</option>';
+      f.values.forEach(function(v) { html += '<option value="' + v + '">' + v + '</option>'; });
+      html += '</select>';
+    } else {
+      html += '<input type="text" data-field="' + f.name + '" placeholder="Enter ' + f.name.toLowerCase() + '…">';
+    }
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function checkForOverrides() {
+  var textarea = document.getElementById('mapping-cmm-ids');
+  var raw = textarea.value.trim();
+  if (!raw) return;
+  var ids = raw.split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; });
+  var group = getGroup(currentGroupId);
+  if (!group) return;
+  var existingIds = group.mappings.map(function(m) { return m.cmmId; });
+  var dupes = ids.filter(function(id) { return existingIds.indexOf(id) !== -1; });
+  if (dupes.length > 0) {
+    document.getElementById('override-ids').textContent = dupes.join(', ');
+    document.getElementById('override-warning').style.display = 'block';
+    document.getElementById('mapping-footer-default').style.display = 'none';
+    document.getElementById('mapping-footer-confirm').style.display = '';
+  } else {
+    insertNewMappings();
+    closeAddMappingDialog();
+  }
+}
+
+function confirmOverride() {
+  insertNewMappings();
+  closeAddMappingDialog();
+}
+
+function insertNewMappings() {
+  var textarea = document.getElementById('mapping-cmm-ids');
+  var raw = textarea.value.trim();
+  if (!raw) return;
+  var ids = raw.split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; });
+  var group = getGroup(currentGroupId);
+  if (!group) return;
+
+  var fieldValues = {};
+  var container = document.getElementById('mapping-fields-container');
+  var inputs = container.querySelectorAll('select[data-field], input[data-field]');
+  inputs.forEach(function(el) {
+    fieldValues[el.getAttribute('data-field')] = el.value || '—';
+  });
+
+  var today = new Date();
+  var dateStr = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+  // Remove duplicates
+  ids.forEach(function(id) {
+    for (var i = group.mappings.length - 1; i >= 0; i--) {
+      if (group.mappings[i].cmmId === id) group.mappings.splice(i, 1);
+    }
+  });
+
+  // Add at top
+  for (var i = ids.length - 1; i >= 0; i--) {
+    group.mappings.unshift({
+      cmmId: ids[i], scenarioName: '—',
+      fieldValues: JSON.parse(JSON.stringify(fieldValues)),
+      modifiedBy: 'you@microsoft.com', modifiedDate: dateStr, _highlight: true
+    });
+  }
+
+  textarea.value = '';
+  renderDetail(currentGroupId);
+  setTimeout(function() { group.mappings.forEach(function(m) { delete m._highlight; }); }, 2500);
+}
+
+/* ── Add Value Dialog ── */
+function openAddValueDialog(groupId, fieldName) {
+  currentGroupId = groupId;
+  activeFieldName = fieldName;
+  stagedValues = [];
+  document.getElementById('add-value-field-name').textContent = fieldName;
+  document.getElementById('add-value-input').value = '';
+
+  var group = getGroup(groupId);
+  var field = null;
+  group.fields.forEach(function(f) { if (f.name === fieldName) field = f; });
+
+  var currentSelect = document.getElementById('add-value-current');
+  var emptyMsg = document.getElementById('add-value-empty');
+  currentSelect.innerHTML = '';
+
+  if (field && field.values.length > 0) {
+    field.values.forEach(function(v) {
+      var opt = document.createElement('option');
+      opt.textContent = v;
+      currentSelect.appendChild(opt);
+    });
+    currentSelect.style.display = '';
+    emptyMsg.style.display = 'none';
+  } else {
+    currentSelect.style.display = 'none';
+    emptyMsg.style.display = '';
+  }
+
+  renderStagedValues();
+  document.getElementById('add-value-dialog').classList.add('show');
+}
+
+function closeAddValueDialog() {
+  document.getElementById('add-value-dialog').classList.remove('show');
+  stagedValues = [];
+  renderStagedValues();
+}
+
+function stageValue() {
+  var input = document.getElementById('add-value-input');
+  var val = input.value.trim();
+  if (!val) return;
+  if (stagedValues.indexOf(val) !== -1) { input.value = ''; return; }
+  stagedValues.push(val);
+  renderStagedValues();
+  input.value = '';
+  input.focus();
+}
+
+function removeStagedValue(idx) {
+  stagedValues.splice(idx, 1);
+  renderStagedValues();
+}
+
+function renderStagedValues() {
+  var container = document.getElementById('staged-values-list');
+  var section = document.getElementById('staged-values-section');
+  var confirmBtn = document.getElementById('confirm-values-btn');
+  if (stagedValues.length === 0) {
+    section.style.display = 'none';
+    confirmBtn.style.display = 'none';
+    return;
+  }
+  section.style.display = '';
+  confirmBtn.style.display = '';
+  confirmBtn.textContent = 'Confirm & Save (' + stagedValues.length + ')';
+  container.innerHTML = '';
+  stagedValues.forEach(function(val, idx) {
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:6px 10px; border-bottom:1px solid #e8f5e9; font-size:13px; color:#2e7d32; word-break:break-word;';
+    var text = document.createElement('span');
+    text.style.cssText = 'flex:1; min-width:0; margin-right:8px;';
+    text.textContent = val;
+    var removeBtn = document.createElement('button');
+    removeBtn.style.cssText = 'background:none; border:none; cursor:pointer; color:#c62828; font-size:13px; padding:2px 4px; flex-shrink:0;';
+    removeBtn.textContent = '✕';
+    removeBtn.onclick = (function(i) { return function() { removeStagedValue(i); }; })(idx);
+    row.appendChild(text);
+    row.appendChild(removeBtn);
+    container.appendChild(row);
+  });
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.target.id === 'add-value-input') {
+    e.preventDefault();
+    stageValue();
+  }
+});
+
+function confirmAddValues() {
+  if (stagedValues.length === 0 || !activeFieldName || !currentGroupId) return;
+  var group = getGroup(currentGroupId);
+  if (!group) return;
+  var field = null;
+  group.fields.forEach(function(f) { if (f.name === activeFieldName) field = f; });
+  if (!field) return;
+  stagedValues.forEach(function(v) {
+    if (field.values.indexOf(v) === -1) field.values.push(v);
+  });
+  stagedValues = [];
+  closeAddValueDialog();
+  renderDetail(currentGroupId);
+}
+
+/* ── Inline Editing (event delegation) ── */
+document.addEventListener('click', function(e) {
+  var tbody = document.getElementById('mappings-tbody');
+  if (!tbody) return;
+
+  var cell = e.target.closest('.cell-editable.dropdown');
+  if (cell && cell.closest('#mappings-tbody')) { startCellEdit(cell); return; }
+
+  var editBtn = e.target.closest('button[title="Edit"]');
+  if (editBtn && editBtn.closest('#mappings-tbody')) { startRowEdit(editBtn.closest('tr')); return; }
+
+  var delBtn = e.target.closest('button[title="Delete"]');
+  if (delBtn && delBtn.closest('#mappings-tbody')) {
+    var row = delBtn.closest('tr');
+    var idx = parseInt(row.getAttribute('data-mapping-idx'));
+    var group = getGroup(currentGroupId);
+    if (group && !isNaN(idx)) {
+      var cmmId = group.mappings[idx].cmmId;
+      if (confirm('Delete mapping for ' + cmmId + '?')) {
+        group.mappings.splice(idx, 1);
+        renderDetail(currentGroupId);
+      }
+    }
+    return;
+  }
+});
+
+function getFieldForColumn(colIdx) {
+  var group = getGroup(currentGroupId);
+  if (!group) return null;
+  var fi = colIdx - 2;
+  if (fi >= 0 && fi < group.fields.length) return group.fields[fi];
+  return null;
+}
+
+function startCellEdit(span) {
+  var td = span.parentElement;
+  var currentVal = span.textContent;
+  var colIdx = Array.from(td.parentElement.children).indexOf(td);
+  var field = getFieldForColumn(colIdx);
+  if (!field || field.type !== 'enum') return;
+
+  var select = document.createElement('select');
+  select.className = 'cell-inline-select';
+  field.values.forEach(function(opt) {
+    var o = document.createElement('option');
+    o.textContent = opt; o.value = opt;
+    if (opt === currentVal) o.selected = true;
+    select.appendChild(o);
+  });
+  td.innerHTML = '';
+  td.appendChild(select);
+  select.focus();
+
+  select.addEventListener('change', function() {
+    showEditConfirm(td.parentElement, colIdx, currentVal, select.value);
+  });
+  select.addEventListener('blur', function() {
+    setTimeout(function() {
+      if (!document.getElementById('edit-confirm-dialog').classList.contains('show')) {
+        td.innerHTML = '<span class="cell-editable dropdown">' + currentVal + '</span>';
+      }
+    }, 200);
+  });
+}
+
+function startRowEdit(tr) {
+  if (editingRowIndex !== null) return;
+  var idx = parseInt(tr.getAttribute('data-mapping-idx'));
+  var group = getGroup(currentGroupId);
+  if (!group || isNaN(idx)) return;
+
+  editingRowIndex = idx;
+  var mapping = group.mappings[idx];
+  originalValues = JSON.parse(JSON.stringify(mapping.fieldValues));
+
+  var cells = tr.children;
+  group.fields.forEach(function(f, fi) {
+    if (f.type === 'enum') {
+      var colIdx = fi + 2;
+      var currentVal = mapping.fieldValues[f.name] || '';
+      replaceWithSelect(cells[colIdx], f.values, currentVal);
+    }
+  });
+
+  var actionTd = cells[cells.length - 1];
+  actionTd.innerHTML =
+    '<div class="row-actions">' +
+    '<button class="save-btn" title="Save" onclick="saveRowEdit()">✔ Save</button>' +
+    '<button class="cancel-btn" title="Cancel" onclick="cancelRowEdit()">✖</button>' +
+    '</div>';
+}
+
+function replaceWithSelect(td, options, currentVal) {
+  var select = document.createElement('select');
+  select.className = 'cell-inline-select';
+  options.forEach(function(opt) {
+    var o = document.createElement('option');
+    o.textContent = opt; o.value = opt;
+    if (opt === currentVal) o.selected = true;
+    select.appendChild(o);
+  });
+  td.innerHTML = '';
+  td.appendChild(select);
+}
+
+function saveRowEdit() {
+  if (editingRowIndex === null) return;
+  var group = getGroup(currentGroupId);
+  if (!group) return;
+
+  var tbody = document.getElementById('mappings-tbody');
+  var tr = tbody.querySelector('tr[data-mapping-idx="' + editingRowIndex + '"]');
+  if (!tr) return;
+
+  var cells = tr.children;
+  var newValues = {};
+  var hasChanges = false;
+  group.fields.forEach(function(f, fi) {
+    if (f.type === 'enum') {
+      var select = cells[fi + 2].querySelector('select');
+      newValues[f.name] = select ? select.value : (originalValues[f.name] || '');
+      if (newValues[f.name] !== (originalValues[f.name] || '')) hasChanges = true;
+    }
+  });
+
+  if (hasChanges) {
+    pendingEdit = { idx: editingRowIndex, newValues: newValues, type: 'row' };
+    var cmmId = group.mappings[editingRowIndex].cmmId;
+    document.getElementById('edit-confirm-cmmid').textContent = cmmId;
+    var ch = '';
+    group.fields.forEach(function(f) {
+      if (f.type === 'enum' && newValues[f.name] !== (originalValues[f.name] || '')) {
+        ch += '<tr><td style="padding:6px 10px; border:1px solid #e0e0e0;">' + f.name + '</td>' +
+          '<td style="padding:6px 10px; border:1px solid #e0e0e0; color:#c62828; text-decoration:line-through;">' + (originalValues[f.name] || '') + '</td>' +
+          '<td style="padding:6px 10px; border:1px solid #e0e0e0; color:#2e7d32; font-weight:600;">' + newValues[f.name] + '</td></tr>';
+      }
+    });
+    document.getElementById('edit-confirm-changes').innerHTML = ch;
+    document.getElementById('edit-confirm-dialog').classList.add('show');
+  } else {
+    cancelRowEdit();
+  }
+}
+
+function showEditConfirm(tr, colIdx, oldVal, newVal) {
+  if (oldVal === newVal) return;
+  var idx = parseInt(tr.getAttribute('data-mapping-idx'));
+  var field = getFieldForColumn(colIdx);
+  if (!field) return;
+  pendingEdit = { idx: idx, colIdx: colIdx, field: field.name, oldVal: oldVal, newVal: newVal, type: 'cell' };
+  var group = getGroup(currentGroupId);
+  document.getElementById('edit-confirm-cmmid').textContent = group.mappings[idx].cmmId;
+  document.getElementById('edit-confirm-changes').innerHTML =
+    '<tr><td style="padding:6px 10px; border:1px solid #e0e0e0;">' + field.name + '</td>' +
+    '<td style="padding:6px 10px; border:1px solid #e0e0e0; color:#c62828; text-decoration:line-through;">' + oldVal + '</td>' +
+    '<td style="padding:6px 10px; border:1px solid #e0e0e0; color:#2e7d32; font-weight:600;">' + newVal + '</td></tr>';
+  document.getElementById('edit-confirm-dialog').classList.add('show');
+}
+
+function applyEdit() {
+  if (!pendingEdit) return;
+  var group = getGroup(currentGroupId);
+  if (!group) return;
+  var today = new Date();
+  var dateStr = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+  if (pendingEdit.type === 'cell') {
+    var m = group.mappings[pendingEdit.idx];
+    m.fieldValues[pendingEdit.field] = pendingEdit.newVal;
+    m.modifiedBy = 'you@microsoft.com';
+    m.modifiedDate = dateStr;
+    m._highlight = true;
+  } else if (pendingEdit.type === 'row') {
+    var m = group.mappings[pendingEdit.idx];
+    for (var key in pendingEdit.newValues) { m.fieldValues[key] = pendingEdit.newValues[key]; }
+    m.modifiedBy = 'you@microsoft.com';
+    m.modifiedDate = dateStr;
+    m._highlight = true;
+    editingRowIndex = null;
+  }
+
+  pendingEdit = null;
+  document.getElementById('edit-confirm-dialog').classList.remove('show');
+  renderDetail(currentGroupId);
+  setTimeout(function() { group.mappings.forEach(function(m) { delete m._highlight; }); }, 2000);
+}
+
+function cancelEdit() {
+  if (pendingEdit && pendingEdit.type === 'cell') {
+    var tbody = document.getElementById('mappings-tbody');
+    if (tbody) {
+      var tr = tbody.querySelector('tr[data-mapping-idx="' + pendingEdit.idx + '"]');
+      if (tr) {
+        var td = tr.children[pendingEdit.colIdx];
+        td.innerHTML = '<span class="cell-editable dropdown">' + pendingEdit.oldVal + '</span>';
+      }
+    }
+  } else if (pendingEdit && pendingEdit.type === 'row') {
+    cancelRowEdit();
+  }
+  pendingEdit = null;
+  document.getElementById('edit-confirm-dialog').classList.remove('show');
+}
+
+function cancelRowEdit() {
+  if (editingRowIndex === null) return;
+  editingRowIndex = null;
+  renderMappingsGrid(getGroup(currentGroupId));
+}
+
+/* ── Initial Render ── */
+renderSwitcher();
+renderPageIndicator();
+</script>
+</body>
+</html>
